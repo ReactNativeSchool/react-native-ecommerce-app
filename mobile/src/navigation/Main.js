@@ -40,12 +40,25 @@ const ExploreStackNav = () => (
   </ExploreStack.Navigator>
 );
 
+const AccountStack = createStackNavigator();
+const AccountStackNav = () => (
+  <AccountStack.Navigator
+    screenOptions={({ navigation }) => ({
+      headerRight: () => (
+        <Button title="Cart" onPress={() => navigation.push('Cart')} />
+      ),
+    })}
+  >
+    <AccountStack.Screen name="Account" component={Account} />
+  </AccountStack.Navigator>
+);
+
 const MainTabs = createBottomTabNavigator();
 const Tabs = () => (
   <MainTabs.Navigator>
     <MainTabs.Screen name="Home" component={HomeStackNav} />
     <MainTabs.Screen name="Explore" component={ExploreStackNav} />
-    <MainTabs.Screen name="Account" component={Account} />
+    <MainTabs.Screen name="Account" component={AccountStackNav} />
   </MainTabs.Navigator>
 );
 

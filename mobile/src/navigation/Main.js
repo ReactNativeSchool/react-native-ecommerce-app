@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -12,12 +11,15 @@ import { ProductDetail } from '../screens/ProductDetail';
 import { SignIn } from '../screens/SignIn';
 import { SignUp } from '../screens/SignUp';
 
+import { TabBarIcon, HeaderIcon } from '../components/Navigation';
+import colors from '../constants/colors';
+
 const HomeStack = createStackNavigator();
 const HomeStackNav = () => (
   <HomeStack.Navigator
     screenOptions={({ navigation }) => ({
       headerRight: () => (
-        <Button title="Cart" onPress={() => navigation.push('Cart')} />
+        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
       ),
     })}
   >
@@ -31,7 +33,7 @@ const ExploreStackNav = () => (
   <ExploreStack.Navigator
     screenOptions={({ navigation }) => ({
       headerRight: () => (
-        <Button title="Cart" onPress={() => navigation.push('Cart')} />
+        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
       ),
     })}
   >
@@ -45,7 +47,7 @@ const AccountStackNav = () => (
   <AccountStack.Navigator
     screenOptions={({ navigation }) => ({
       headerRight: () => (
-        <Button title="Cart" onPress={() => navigation.push('Cart')} />
+        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
       ),
     })}
   >
@@ -55,7 +57,15 @@ const AccountStackNav = () => (
 
 const MainTabs = createBottomTabNavigator();
 const Tabs = () => (
-  <MainTabs.Navigator>
+  <MainTabs.Navigator
+    tabBarOptions={{
+      activeTintColor: colors.brand,
+      inactiveTintColor: colors.icon,
+    }}
+    screenOptions={({ route }) => ({
+      tabBarIcon: props => <TabBarIcon {...props} routeName={route.name} />,
+    })}
+  >
     <MainTabs.Screen name="Home" component={HomeStackNav} />
     <MainTabs.Screen name="Explore" component={ExploreStackNav} />
     <MainTabs.Screen name="Account" component={AccountStackNav} />
@@ -85,7 +95,11 @@ export const Main = () => (
       component={Cart}
       options={({ navigation }) => ({
         headerLeft: () => (
-          <Button title="Close" onPress={() => navigation.pop()} />
+          <HeaderIcon
+            name="close"
+            style={{ tintColor: colors.brand }}
+            onPress={() => navigation.pop()}
+          />
         ),
       })}
     />
@@ -94,7 +108,11 @@ export const Main = () => (
       component={AuthTabs}
       options={({ navigation }) => ({
         headerLeft: () => (
-          <Button title="Close" onPress={() => navigation.pop()} />
+          <HeaderIcon
+            name="close"
+            style={{ tintColor: colors.brand }}
+            onPress={() => navigation.pop()}
+          />
         ),
       })}
     />

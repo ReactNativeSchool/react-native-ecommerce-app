@@ -8,7 +8,7 @@ export const TabBarIcon = ({ routeName, color, size }) => {
     src = require('../assets/images/apps-outline.png');
   }
 
-  if (routeName === 'Explore') {
+  if (routeName === 'Account') {
     src = require('../assets/images/person-circle-outline.png');
   }
 

@@ -8,3 +8,7 @@ const appFetch = (path, options = {}) =>
 export const useHomeData = () => {
   return useQuery('home', () => appFetch('/products/trending'));
 };
+
+export const useExploreData = () => {
+  return useQuery('explore', () => appFetch('/products/explore'));
+};

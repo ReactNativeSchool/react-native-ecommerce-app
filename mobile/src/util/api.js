@@ -12,3 +12,7 @@ export const useHomeData = () => {
 export const useExploreData = () => {
   return useQuery('explore', () => appFetch('/products/explore'));
 };
+
+export const useDetailData = ({ id }) => {
+  return useQuery(`details-${id}`, () => appFetch(`/product/${id}`));
+};

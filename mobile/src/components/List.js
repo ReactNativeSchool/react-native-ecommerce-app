@@ -112,6 +112,7 @@ export const ProductList = ({ sections = [] }) => {
 
         const onPress = () => {
           navigation.push('Details', {
+            id: item.id,
             name: item.name,
             price: item.price,
             image: item.image,

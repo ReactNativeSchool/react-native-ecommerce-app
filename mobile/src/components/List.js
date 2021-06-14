@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#fff',
     borderTopColor: colors.border,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   itemImage: {
     width: screen.width * 0.4,
@@ -72,7 +72,13 @@ export const SectionHeader = ({ children }) => (
 );
 
 export const SectionFooter = () => (
-  <View style={{ flex: 1, backgroundColor: colors.border, height: 1 }} />
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: colors.border,
+      height: StyleSheet.hairlineWidth,
+    }}
+  />
 );
 
 export const ItemCard = ({ name, price, image, onPress }) => (
@@ -105,7 +111,11 @@ export const ProductList = ({ sections = [] }) => {
         const nextItem = section.data[index + 1];
 
         const onPress = () => {
-          navigation.push('Details');
+          navigation.push('Details', {
+            name: item.name,
+            price: item.price,
+            image: item.image,
+          });
         };
 
         return (

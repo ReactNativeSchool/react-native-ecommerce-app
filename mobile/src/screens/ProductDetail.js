@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, View, Image, StyleSheet } from 'react-native';
 
 import { Text } from '../components/Text';
 import colors from '../constants/colors';
 import { money } from '../util/format';
 import { useDetailData } from '../util/api';
+import { Loading } from '../components/Loading';
 
 const styles = StyleSheet.create({
   section: {
@@ -25,25 +26,35 @@ const styles = StyleSheet.create({
 });
 
 export const ProductDetail = ({ route }) => {
-  const { id, name, image, price } = route.params;
+  const [data, setData] = React.useState(route.params);
 
-  const res = useDetailData({ id });
-  console.log('res', res);
+  const res = useDetailData({ id: route.params.id });
+
+  useEffect(() => {
+    if (res.isSuccess && res?.data?.data) {
+      setData(res.data.data);
+    }
+  }, [res.isFetching]);
 
   return (
     <ScrollView>
       <View style={styles.section}>
         <Image
-          source={{ uri: image }}
+          source={{ uri: data.image }}
           style={styles.image}
           resizeMode="cover"
         />
         <View style={{ flex: 1 }}>
-          <Text type="header">{name}</Text>
+          <Text type="header">{data.name}</Text>
           <Text type="subheader" style={{ marginTop: 5 }}>
-            {money(price)}
+            {money(data.price)}
           </Text>
         </View>
+      </View>
+
+      <View style={[styles.section, { flexDirection: 'column' }]}>
+        <Text type="header">Description</Text>
+        {data.isLoading ? <Loading /> : <Text>{data.description}</Text>}
       </View>
     </ScrollView>
   );

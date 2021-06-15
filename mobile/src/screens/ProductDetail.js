@@ -6,6 +6,7 @@ import colors from '../constants/colors';
 import { money } from '../util/format';
 import { useDetailData } from '../util/api';
 import { Loading } from '../components/Loading';
+import { QuantityCounter } from '../components/QuantityCounter';
 
 const styles = StyleSheet.create({
   section: {
@@ -37,25 +38,33 @@ export const ProductDetail = ({ route }) => {
   }, [res.isFetching]);
 
   return (
-    <ScrollView>
-      <View style={styles.section}>
-        <Image
-          source={{ uri: data.image }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <View style={{ flex: 1 }}>
-          <Text type="header">{data.name}</Text>
-          <Text type="subheader" style={{ marginTop: 5 }}>
-            {money(data.price)}
-          </Text>
+    <>
+      <ScrollView>
+        <View style={styles.section}>
+          <Image
+            source={{ uri: data.image }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+          <View style={{ flex: 1 }}>
+            <Text type="header">{data.name}</Text>
+            <Text type="subheader" style={{ marginTop: 5 }}>
+              {money(data.price)}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      <View style={[styles.section, { flexDirection: 'column' }]}>
-        <Text type="header">Description</Text>
-        {data.isLoading ? <Loading /> : <Text>{data.description}</Text>}
-      </View>
-    </ScrollView>
+        <View style={[styles.section, { flexDirection: 'column' }]}>
+          <Text type="header">Description</Text>
+          {data.isLoading ? <Loading /> : <Text>{data.description}</Text>}
+        </View>
+      </ScrollView>
+      <QuantityCounter
+        price={data.price}
+        quantity={0}
+        onDecrement={() => console.log('TODO: Decrement')}
+        onIncrement={() => console.log('TODO: Increment')}
+      />
+    </>
   );
 };

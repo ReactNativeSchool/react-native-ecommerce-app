@@ -4,6 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from './Text';
 import { money } from '../util/format';
 import { Counter } from './QuantityCounter';
+import { useCart, useItem } from '../util/cart';
 
 const styles = StyleSheet.create({
   row: {
@@ -15,12 +16,25 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CartRow = ({ name, price, quantity = 0 }) => (
-  <View style={styles.row}>
-    <View>
-      <Text style={{ fontWeight: 'bold' }}>{name}</Text>
-      <Text>{money(price)}</Text>
+export const CartRow = ({ id }) => {
+  const { addItem, removeItem } = useCart(state => ({
+    addItem: state.addItem,
+    removeItem: state.removeItem,
+  }));
+  const item = useItem(id);
+
+  return (
+    <View style={styles.row}>
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+        <Text>{money(item.price)}</Text>
+      </View>
+      <Counter
+        type="small"
+        quantity={item.quantity}
+        onIncrement={() => addItem(item)}
+        onDecrement={() => removeItem({ id: item.id })}
+      />
     </View>
-    <Counter type="small" quantity={quantity} />
-  </View>
-);
+  );
+};

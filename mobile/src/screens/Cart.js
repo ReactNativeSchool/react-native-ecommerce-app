@@ -35,15 +35,7 @@ export const Cart = () => {
   return (
     <ScrollView style={styles.container}>
       {Object.keys(cart).map(id => {
-        const item = cart[id];
-        return (
-          <CartRow
-            key={item.id}
-            name={item.name}
-            price={item.price}
-            quantity={item.quantity}
-          />
-        );
+        return <CartRow key={id} id={id} />;
       })}
     </ScrollView>
   );

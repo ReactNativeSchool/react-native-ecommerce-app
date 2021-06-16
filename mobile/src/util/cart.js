@@ -47,3 +47,7 @@ export const useCart = create(
     },
   ),
 );
+
+export const useItem = id => {
+  return useCart(state => state.cart[id]);
+};

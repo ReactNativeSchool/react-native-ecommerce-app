@@ -13,6 +13,17 @@ export const cartTotal = cart => {
   return total;
 };
 
+export const cartQuantity = cart => {
+  let quantity = 0;
+
+  Object.keys(cart).forEach(id => {
+    const item = cart[id];
+    quantity += item.quantity;
+  });
+
+  return quantity;
+};
+
 export const useCart = create(
   persist(
     set => ({

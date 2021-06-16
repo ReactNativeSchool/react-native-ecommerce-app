@@ -11,17 +11,15 @@ import { ProductDetail } from '../screens/ProductDetail';
 import { SignIn } from '../screens/SignIn';
 import { SignUp } from '../screens/SignUp';
 
-import { TabBarIcon, HeaderIcon } from '../components/Navigation';
+import { TabBarIcon, HeaderIcon, CartIcon } from '../components/Navigation';
 import colors from '../constants/colors';
 
 const HomeStack = createStackNavigator();
 const HomeStackNav = () => (
   <HomeStack.Navigator
-    screenOptions={({ navigation }) => ({
-      headerRight: () => (
-        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
-      ),
-    })}
+    screenOptions={{
+      headerRight: () => <CartIcon />,
+    }}
   >
     <HomeStack.Screen name="Home" component={Home} />
     <HomeStack.Screen name="Details" component={ProductDetail} />
@@ -31,11 +29,9 @@ const HomeStackNav = () => (
 const ExploreStack = createStackNavigator();
 const ExploreStackNav = () => (
   <ExploreStack.Navigator
-    screenOptions={({ navigation }) => ({
-      headerRight: () => (
-        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
-      ),
-    })}
+    screenOptions={{
+      headerRight: () => <CartIcon />,
+    }}
   >
     <ExploreStack.Screen name="Explore" component={Explore} />
     <ExploreStack.Screen name="Details" component={ProductDetail} />
@@ -45,11 +41,9 @@ const ExploreStackNav = () => (
 const AccountStack = createStackNavigator();
 const AccountStackNav = () => (
   <AccountStack.Navigator
-    screenOptions={({ navigation }) => ({
-      headerRight: () => (
-        <HeaderIcon name="cart" onPress={() => navigation.push('Cart')} />
-      ),
-    })}
+    screenOptions={{
+      headerRight: () => <CartIcon />,
+    }}
   >
     <AccountStack.Screen name="Account" component={Account} />
   </AccountStack.Navigator>

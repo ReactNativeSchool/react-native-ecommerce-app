@@ -7,6 +7,7 @@ import { money } from '../util/format';
 import { useDetailData } from '../util/api';
 import { Loading } from '../components/Loading';
 import { QuantityCounter } from '../components/QuantityCounter';
+import { useCart } from '../util/cart';
 
 const styles = StyleSheet.create({
   section: {
@@ -27,6 +28,12 @@ const styles = StyleSheet.create({
 });
 
 export const ProductDetail = ({ route }) => {
+  const cart = useCart(state => ({
+    quantity: state.cart[route.params.id]?.quantity || 0,
+    addItem: state.addItem,
+    removeItem: state.removeItem,
+  }));
+
   const [data, setData] = React.useState(route.params);
 
   const res = useDetailData({ id: route.params.id });
@@ -61,9 +68,11 @@ export const ProductDetail = ({ route }) => {
       </ScrollView>
       <QuantityCounter
         price={data.price}
-        quantity={0}
-        onDecrement={() => console.log('TODO: Decrement')}
-        onIncrement={() => console.log('TODO: Increment')}
+        quantity={cart.quantity}
+        onDecrement={() => cart.removeItem({ id: data.id })}
+        onIncrement={() =>
+          cart.addItem({ id: data.id, price: data.price, name: data.name })
+        }
       />
     </>
   );

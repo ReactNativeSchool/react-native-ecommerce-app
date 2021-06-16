@@ -3,8 +3,9 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 
 import { Text } from '../components/Text';
 import colors from '../constants/colors';
-import { useCart } from '../util/cart';
+import { useCart, cartTotal } from '../util/cart';
 import { CartRow } from '../components/CartRow';
+import { money } from '../util/format';
 
 const styles = StyleSheet.create({
   emptyContainer: {
@@ -15,6 +16,12 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.white,
+  },
+  summaryContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    borderTopColor: colors.border,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });
 
@@ -37,6 +44,12 @@ export const Cart = () => {
       {Object.keys(cart).map(id => {
         return <CartRow key={id} id={id} />;
       })}
+      <View style={styles.summaryContainer}>
+        <Text>
+          <Text style={{ fontWeight: 'bold' }}>Total: </Text>
+          {money(cartTotal(cart))}
+        </Text>
+      </View>
     </ScrollView>
   );
 };

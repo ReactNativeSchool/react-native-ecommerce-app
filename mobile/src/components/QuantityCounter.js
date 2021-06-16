@@ -35,10 +35,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     color: '#707070',
   },
+  btnTextSmall: {
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+  },
   priceText: {
     fontWeight: 'bold',
   },
 });
+
+export const Counter = ({ quantity, onDecrement, onIncrement, type }) => {
+  const btnTextStyles = [styles.btnText];
+  if (type === 'small') {
+    btnTextStyles.push(styles.btnTextSmall);
+  }
+
+  return (
+    <View style={styles.counter}>
+      <TouchableOpacity style={styles.btn} onPress={onDecrement}>
+        <Text style={btnTextStyles}>-</Text>
+      </TouchableOpacity>
+      <Text style={styles.quantityText}>{quantity}</Text>
+      <TouchableOpacity style={styles.btn} onPress={onIncrement}>
+        <Text style={btnTextStyles}>+</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export const QuantityCounter = ({
   price,
@@ -48,15 +71,11 @@ export const QuantityCounter = ({
 }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.counter}>
-        <TouchableOpacity style={styles.btn} onPress={onDecrement}>
-          <Text style={styles.btnText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.quantityText}>{quantity}</Text>
-        <TouchableOpacity style={styles.btn} onPress={onIncrement}>
-          <Text style={styles.btnText}>+</Text>
-        </TouchableOpacity>
-      </View>
+      <Counter
+        quantity={quantity}
+        onDecrement={onDecrement}
+        onIncrement={onIncrement}
+      />
       <Text style={styles.priceText}>{money(price)}</Text>
     </View>
   );

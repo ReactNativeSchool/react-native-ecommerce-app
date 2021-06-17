@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query';
+import { useStripe } from '@stripe/stripe-react-native';
 
 const API_URL = 'http://localhost:3000/api';
 
@@ -15,4 +16,41 @@ export const useExploreData = () => {
 
 export const useDetailData = ({ id }) => {
   return useQuery(`details-${id}`, () => appFetch(`/product/${id}`));
+};
+
+export const usePayment = (cart = {}) => {
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  const fetchPaymentSheetParams = async () => {
+    const response = await fetch(`${API_URL}/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        cart,
+      }),
+    });
+    const { paymentIntent } = await response.json();
+
+    return {
+      paymentIntent,
+    };
+  };
+
+  const checkout = async () => {
+    const { paymentIntent } = await fetchPaymentSheetParams();
+
+    const { error } = await initPaymentSheet({
+      paymentIntentClientSecret: paymentIntent,
+    });
+
+    if (!error) {
+      return presentPaymentSheet({ clientSecret: paymentIntent });
+    }
+
+    return null;
+  };
+
+  return { checkout };
 };

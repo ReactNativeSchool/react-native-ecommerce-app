@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 
 import { Text } from '../components/Text';
 import colors from '../constants/colors';
 import { useCart, cartTotal } from '../util/cart';
 import { CartRow } from '../components/CartRow';
 import { money } from '../util/format';
+import { usePayment } from '../util/api';
+import { Button } from '../components/Button';
 
 const styles = StyleSheet.create({
   emptyContainer: {
@@ -25,8 +27,29 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Cart = () => {
-  const { cart } = useCart(state => ({ cart: state.cart }));
+export const Cart = ({ navigation }) => {
+  const { cart, clearCart } = useCart(state => ({
+    cart: state.cart,
+    clearCart: state.clearCart,
+  }));
+  const { checkout } = usePayment(cart);
+
+  const onCheckout = async () => {
+    try {
+      const { error } = await checkout();
+      if (!error) {
+        Alert.alert('Success', 'Your order is confirmed!');
+        clearCart();
+        navigation.popToTop();
+        navigation.goBack(null);
+      } else {
+        console.log('error', error);
+      }
+    } catch (error) {
+      Alert.alert('Sorry', 'Something went wrong.');
+      console.log(error);
+    }
+  };
 
   const isEmpty = Object.keys(cart).length === 0;
   if (isEmpty) {
@@ -49,6 +72,10 @@ export const Cart = () => {
           <Text style={{ fontWeight: 'bold' }}>Total: </Text>
           {money(cartTotal(cart))}
         </Text>
+
+        <View style={{ marginTop: 20 }}>
+          <Button onPress={onCheckout}>Checkout</Button>
+        </View>
       </View>
     </ScrollView>
   );

@@ -62,6 +62,7 @@ export const useCart = create(
 
           return { cart };
         }),
+      clearCart: () => set(() => ({ cart: {} })),
     }),
     {
       name: 'cart',
@@ -71,5 +72,5 @@ export const useCart = create(
 );
 
 export const useItem = id => {
-  return useCart(state => state.cart[id]);
+  return useCart(state => state.cart[id] || {});
 };

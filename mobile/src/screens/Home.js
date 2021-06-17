@@ -12,7 +12,7 @@ export const Home = () => {
     return <Loading />;
   }
 
-  const sections = data.data.map(d => ({
+  const sections = data?.data?.map(d => ({
     ...d,
     data: d.items,
     items: undefined,

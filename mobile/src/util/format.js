@@ -1,6 +1,3 @@
 export const money = num => {
-  return (num * 0.01).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  return `$${Math.round(num * 0.01 * 100) / 100}`;
 };

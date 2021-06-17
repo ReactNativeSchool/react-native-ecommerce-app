@@ -355,6 +355,12 @@ PODS:
     - Yoga
   - RNScreens (3.2.0):
     - React-Core
+  - Stripe (21.6.0):
+    - Stripe/Stripe3DS2 (= 21.6.0)
+  - stripe-react-native (0.1.4):
+    - React
+    - Stripe (~> 21.6.0)
+  - Stripe/Stripe3DS2 (21.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -414,6 +420,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -429,6 +436,7 @@ SPEC REPOS:
     - FlipperKit
     - libevent
     - OpenSSL-Universal
+    - Stripe
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -498,6 +506,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  stripe-react-native:
+    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -546,9 +556,11 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: b8c8004b43446e3c2709fe64b2b41072f87428ad
   RNScreens: c277bfc4b5bb7c2fe977d19635df6f974f95dfd6
+  Stripe: 6cc7bb348f4b1fad111129f6ee40eb6682deaefb
+  stripe-react-native: 86469904cad7d2a2e07f38f5d10c003048d5d6fc
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: a78c9966304df99cf2ade33b06349c1815f605f6
+PODFILE CHECKSUM: 2d3e60306fb5171faae330217f5c3d8d302d69c3
 
 COCOAPODS: 1.10.1

@@ -1,6 +1,22 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import * as yup from 'yup';
+import create from 'zustand';
+import { persist } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const useAuth = create(
+  persist(
+    set => ({
+      token: null,
+      setToken: token => set({ token }),
+    }),
+    {
+      name: 'auth',
+      getStorage: () => AsyncStorage,
+    },
+  ),
+);
 
 export const useLogin = () => {
   const [email, setEmail] = React.useState('');

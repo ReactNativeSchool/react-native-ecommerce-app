@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert } from 'react-native';
+import * as yup from 'yup';
 
 export const useLogin = () => {
   const [email, setEmail] = React.useState('');
@@ -32,4 +33,20 @@ export const useLogin = () => {
     password,
     setPassword,
   };
+};
+
+export const validateCredentials = (credentials = {}) => {
+  const schema = yup.object().shape({
+    email: yup.string().email().required().label('Email'),
+    password: yup.string().required().label('Password'),
+    // Look at yup.when to only use this on sign up
+    // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
+    confirmPassword: yup
+      .string()
+      .test('passwords-match', 'Passwords must match', function (value) {
+        return this.parent.password === value;
+      }),
+  });
+
+  return schema.validate(credentials, { abortEarly: false });
 };

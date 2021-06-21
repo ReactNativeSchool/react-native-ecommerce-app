@@ -8,6 +8,7 @@ import { CartRow } from '../components/CartRow';
 import { money } from '../util/format';
 import { usePayment } from '../util/api';
 import { Button } from '../components/Button';
+import { useAuth } from '../util/auth';
 
 const styles = StyleSheet.create({
   emptyContainer: {
@@ -28,6 +29,11 @@ const styles = StyleSheet.create({
 });
 
 export const Cart = ({ navigation }) => {
+  const { token } = useAuth(state => ({
+    token: state.token,
+  }));
+  const isLoggedIn = token !== null;
+
   const { cart, clearCart } = useCart(state => ({
     cart: state.cart,
     clearCart: state.clearCart,
@@ -74,7 +80,13 @@ export const Cart = ({ navigation }) => {
         </Text>
 
         <View style={{ marginTop: 20 }}>
-          <Button onPress={onCheckout}>Checkout</Button>
+          {isLoggedIn ? (
+            <Button onPress={onCheckout}>Checkout</Button>
+          ) : (
+            <Button onPress={() => navigation.push('Auth')}>
+              Login to Checkout
+            </Button>
+          )}
         </View>
       </View>
     </ScrollView>

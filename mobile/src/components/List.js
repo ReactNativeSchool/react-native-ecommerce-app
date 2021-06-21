@@ -110,12 +110,12 @@ export const ProductList = ({ sections = [] }) => {
         const item = section.data[index];
         const nextItem = section.data[index + 1];
 
-        const onPress = () => {
+        const onPress = itemToSend => {
           navigation.push('Details', {
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            image: item.image,
+            id: itemToSend.id,
+            name: itemToSend.name,
+            price: itemToSend.price,
+            image: itemToSend.image,
           });
         };
 
@@ -127,9 +127,9 @@ export const ProductList = ({ sections = [] }) => {
               backgroundColor: '#fff',
             }}
           >
-            <ItemCard {...item} onPress={onPress} />
+            <ItemCard {...item} onPress={() => onPress(item)} />
             {nextItem ? (
-              <ItemCard {...nextItem} onPress={onPress} />
+              <ItemCard {...nextItem} onPress={() => onPress(nextItem)} />
             ) : (
               <View style={{ flex: 1 }} />
             )}

@@ -12,3 +12,7 @@ export const generateJWT = async userId => {
 
   return token;
 };
+
+export const comparePassword = async (password, userPassword) => {
+  return bcrypt.compare(password, userPassword);
+};

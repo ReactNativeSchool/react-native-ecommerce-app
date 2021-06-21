@@ -85,18 +85,23 @@ export const usePayment = (cart = {}) => {
         cart,
       }),
     });
-    const { paymentIntent } = await response.json();
+    const { paymentIntent, customer, ephemeralKey } = await response.json();
 
     return {
       paymentIntent,
+      customer,
+      ephemeralKey,
     };
   };
 
   const checkout = async () => {
-    const { paymentIntent } = await fetchPaymentSheetParams();
+    const { paymentIntent, customer, ephemeralKey } =
+      await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
       paymentIntentClientSecret: paymentIntent,
+      customerEphemeralKeySecret: ephemeralKey,
+      customerId: customer,
     });
 
     if (!error) {

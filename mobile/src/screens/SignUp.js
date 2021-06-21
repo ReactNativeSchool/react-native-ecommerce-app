@@ -41,7 +41,7 @@ export const SignUp = ({ navigation }) => {
 
     signup.mutate(form, {
       onSuccess: () => {
-        navigation.popToTop();
+        navigation.pop();
       },
     });
   };

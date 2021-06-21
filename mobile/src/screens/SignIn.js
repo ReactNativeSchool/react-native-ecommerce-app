@@ -41,7 +41,7 @@ export const SignIn = ({ navigation }) => {
 
     signin.mutate(form, {
       onSuccess: () => {
-        navigation.popToTop();
+        navigation.pop();
       },
     });
   };

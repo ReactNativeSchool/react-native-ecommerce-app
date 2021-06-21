@@ -10,13 +10,17 @@ const getUser = async req => {
   try {
     const decoded = await decodeJWT(req?.headers?.authorization);
 
-    const user = await prisma.user.findFirst({
-      where: {
-        id: decoded.id,
-      },
-    });
+    if (decoded && decoded.id) {
+      const user = await prisma.user.findFirst({
+        where: {
+          id: decoded.id,
+        },
+      });
 
-    return user;
+      return user;
+    }
+
+    return null;
   } catch {
     return null;
   }
@@ -51,6 +55,7 @@ export default async (req, res) => {
   if (!user.stripe_customer_id) {
     user = await createStripeUser(user);
   }
+  console.log('user', user);
 
   const cart = req.body.cart || {};
 

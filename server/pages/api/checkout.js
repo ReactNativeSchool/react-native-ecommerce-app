@@ -22,16 +22,34 @@ const getUser = async req => {
   }
 };
 
+const createStripeUser = async ({ id, email }) => {
+  const customer = await stripe.customers.create({ email });
+
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      stripe_customer_id: customer.id,
+    },
+  });
+};
+
 export default async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const user = await getUser(req, res);
+  let user = await getUser(req, res);
   if (!user) {
     return res
       .status(401)
       .json({ message: 'You must be signed in to do that.' });
+  }
+
+  // Ensure that we've registered them with stripe
+  if (!user.stripe_customer_id) {
+    user = await createStripeUser(user);
   }
 
   const cart = req.body.cart || {};
@@ -56,15 +74,24 @@ export default async (req, res) => {
     total += product.price * cart[product.id].quantity;
   });
 
+  // Create an ephemeral key for the Customer; this allows the app to display saved payment methods and save new ones
+  const ephemeralKey = await stripe.ephemeralKeys.create(
+    { customer: user.stripe_customer_id },
+    { apiVersion: '2020-08-27' },
+  );
+
   // Create payment intent
   const paymentIntent = await stripe.paymentIntents.create({
     amount: total,
     currency: 'usd',
+    customer: user.stripe_customer_id,
   });
 
   return res.status(200).json({
     publishableKey: process.env.STRIPE_PUBLIC,
     paymentIntent: paymentIntent.client_secret,
+    customer: user.stripe_customer_id,
+    ephemeralKey: ephemeralKey.secret,
     cart,
   });
 };

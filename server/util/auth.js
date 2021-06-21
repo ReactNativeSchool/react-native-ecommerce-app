@@ -16,3 +16,10 @@ export const generateJWT = async userId => {
 export const comparePassword = async (password, userPassword) => {
   return bcrypt.compare(password, userPassword);
 };
+
+export const decodeJWT = async (authHeader = '') => {
+  const [, token] = authHeader.split('Bearer ');
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+
+  return decoded;
+};

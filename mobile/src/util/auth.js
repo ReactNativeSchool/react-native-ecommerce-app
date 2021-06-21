@@ -52,17 +52,24 @@ export const useLogin = () => {
   };
 };
 
-export const validateCredentials = (credentials = {}) => {
-  const schema = yup.object().shape({
-    email: yup.string().email().required().label('Email'),
-    password: yup.string().required().label('Password'),
-    // Look at yup.when to only use this on sign up
-    // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
-    confirmPassword: yup
+export const validateCredentials = (
+  credentials = {},
+  useConfirmPassword = true,
+) => {
+  const extraValidation = {};
+
+  if (useConfirmPassword) {
+    extraValidation.confirmPassword = yup
       .string()
       .test('passwords-match', 'Passwords must match', function (value) {
         return this.parent.password === value;
-      }),
+      });
+  }
+
+  const schema = yup.object().shape({
+    email: yup.string().email().required().label('Email'),
+    password: yup.string().required().label('Password'),
+    ...extraValidation,
   });
 
   return schema.validate(credentials, { abortEarly: false });

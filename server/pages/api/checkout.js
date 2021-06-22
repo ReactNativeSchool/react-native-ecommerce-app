@@ -62,7 +62,7 @@ const getTotalPrice = (products, cart) => {
   return total;
 };
 
-const createStripPaymentIntent = async (customerId, total) => {
+const createStripePaymentIntent = async (customerId, total) => {
   // Create an ephemeral key for the Customer; this allows the app to display saved payment methods and save new ones
   const ephemeralKey = await stripe.ephemeralKeys.create(
     { customer: customerId },
@@ -105,7 +105,7 @@ export default async (req, res) => {
   const total = getTotalPrice(products, cart);
 
   // Connect with stripe and create a payment intent
-  const { ephemeralKey, paymentIntent } = createStripPaymentIntent(
+  const { ephemeralKey, paymentIntent } = createStripePaymentIntent(
     user.stripe_customer_id,
     total,
   );

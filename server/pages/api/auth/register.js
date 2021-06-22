@@ -1,8 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
+import prisma from '../../../util/prisma';
 import { hashPassword, generateJWT } from '../../../util/auth';
-
-const prisma = new PrismaClient();
 
 export default async (req, res) => {
   if (req.method !== 'POST') {

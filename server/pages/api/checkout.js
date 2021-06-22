@@ -1,9 +1,8 @@
 import Stripe from 'stripe';
-import { PrismaClient } from '@prisma/client';
 
 import { decodeJWT } from '../../util/auth';
+import prisma from '../../util/prisma';
 
-const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET);
 
 const getUser = async req => {

@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   headerText: {
-    fontWeight: '600',
-    fontSize: 32,
+    fontWeight: '700',
+    fontSize: 26,
     marginBottom: 6,
   },
   subHeaderText: {

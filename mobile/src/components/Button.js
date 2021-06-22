@@ -5,11 +5,11 @@ import colors from '../constants/colors';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.brand,
     paddingVertical: 14,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: colors.primary,
+    borderColor: colors.brand,
     marginVertical: 7,
   },
   containerOutline: {
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   textOutline: {
-    color: colors.primary,
+    color: colors.brand,
   },
 });
 

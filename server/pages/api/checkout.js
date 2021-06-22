@@ -39,6 +39,47 @@ const createStripeUser = async ({ id, email }) => {
   });
 };
 
+const getProductsFromCart = cart => {
+  const productIds = Object.keys(cart);
+  return prisma.product.findMany({
+    where: {
+      id: {
+        in: productIds,
+      },
+    },
+    select: {
+      id: true,
+      price: true,
+    },
+  });
+};
+
+const getTotalPrice = (products, cart) => {
+  let total = 0;
+  products.forEach(product => {
+    total += product.price * cart[product.id].quantity;
+  });
+
+  return total;
+};
+
+const createStripPaymentIntent = async (customerId, total) => {
+  // Create an ephemeral key for the Customer; this allows the app to display saved payment methods and save new ones
+  const ephemeralKey = await stripe.ephemeralKeys.create(
+    { customer: customerId },
+    { apiVersion: '2020-08-27' },
+  );
+
+  // Create payment intent
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: total,
+    currency: 'usd',
+    customer: customerId,
+  });
+
+  return { ephemeralKey, paymentIntent };
+};
+
 export default async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -51,49 +92,26 @@ export default async (req, res) => {
       .json({ message: 'You must be signed in to do that.' });
   }
 
-  // Ensure that we've registered them with stripe
+  // Ensure that we've registered them with stripe. This will happen on their first checkout
   if (!user.stripe_customer_id) {
     user = await createStripeUser(user);
   }
-  console.log('user', user);
 
   const cart = req.body.cart || {};
 
   // get products
-  const productIds = Object.keys(cart);
-  const products = await prisma.product.findMany({
-    where: {
-      id: {
-        in: productIds,
-      },
-    },
-    select: {
-      id: true,
-      price: true,
-    },
-  });
+  const products = await getProductsFromCart(cart);
 
   // calculate total
-  let total = 0;
-  products.forEach(product => {
-    total += product.price * cart[product.id].quantity;
-  });
+  const total = getTotalPrice(products, cart);
 
-  // Create an ephemeral key for the Customer; this allows the app to display saved payment methods and save new ones
-  const ephemeralKey = await stripe.ephemeralKeys.create(
-    { customer: user.stripe_customer_id },
-    { apiVersion: '2020-08-27' },
+  // Connect with stripe and create a payment intent
+  const { ephemeralKey, paymentIntent } = createStripPaymentIntent(
+    user.stripe_customer_id,
+    total,
   );
 
-  // Create payment intent
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: total,
-    currency: 'usd',
-    customer: user.stripe_customer_id,
-  });
-
   return res.status(200).json({
-    publishableKey: process.env.STRIPE_PUBLIC,
     paymentIntent: paymentIntent.client_secret,
     customer: user.stripe_customer_id,
     ephemeralKey: ephemeralKey.secret,

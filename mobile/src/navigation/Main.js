@@ -1,5 +1,8 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  HeaderBackButton,
+} from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -14,13 +17,20 @@ import { SignUp } from '../screens/SignUp';
 import { TabBarIcon, HeaderIcon, CartIcon } from '../components/Navigation';
 import colors from '../constants/colors';
 
+const tabStackScreenOptions = {
+  headerRight: () => <CartIcon />,
+  headerBackTitleVisible: false,
+  headerLeft: props => {
+    if (!props.canGoBack) {
+      return null;
+    }
+    return <HeaderBackButton {...props} tintColor={colors.brand} />;
+  },
+};
+
 const HomeStack = createStackNavigator();
 const HomeStackNav = () => (
-  <HomeStack.Navigator
-    screenOptions={{
-      headerRight: () => <CartIcon />,
-    }}
-  >
+  <HomeStack.Navigator screenOptions={tabStackScreenOptions}>
     <HomeStack.Screen name="Home" component={Home} />
     <HomeStack.Screen name="Details" component={ProductDetail} />
   </HomeStack.Navigator>
@@ -28,11 +38,7 @@ const HomeStackNav = () => (
 
 const ExploreStack = createStackNavigator();
 const ExploreStackNav = () => (
-  <ExploreStack.Navigator
-    screenOptions={{
-      headerRight: () => <CartIcon />,
-    }}
-  >
+  <ExploreStack.Navigator screenOptions={tabStackScreenOptions}>
     <ExploreStack.Screen name="Explore" component={Explore} />
     <ExploreStack.Screen name="Details" component={ProductDetail} />
   </ExploreStack.Navigator>
@@ -40,11 +46,7 @@ const ExploreStackNav = () => (
 
 const AccountStack = createStackNavigator();
 const AccountStackNav = () => (
-  <AccountStack.Navigator
-    screenOptions={{
-      headerRight: () => <CartIcon />,
-    }}
-  >
+  <AccountStack.Navigator screenOptions={tabStackScreenOptions}>
     <AccountStack.Screen name="Account" component={Account} />
   </AccountStack.Navigator>
 );

@@ -1,9 +1,8 @@
 import { useQuery, useMutation } from 'react-query';
 import { useStripe } from '@stripe/stripe-react-native';
+import { API_URL } from '@env';
 
 import { useAuth } from './auth';
-
-const API_URL = 'http://localhost:3000/api';
 
 const appFetch = (path, options = {}) =>
   fetch(`${API_URL}${path}`, options).then(res => res.json());

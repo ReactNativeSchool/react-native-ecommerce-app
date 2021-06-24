@@ -1,29 +1,9 @@
 import Stripe from 'stripe';
 
-import { decodeJWT } from '../../util/auth';
+import { getUserFromHeader } from '../../util/auth';
 import prisma from '../../util/prisma';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET);
-
-const getUser = async req => {
-  try {
-    const decoded = await decodeJWT(req?.headers?.authorization);
-
-    if (decoded && decoded.id) {
-      const user = await prisma.user.findFirst({
-        where: {
-          id: decoded.id,
-        },
-      });
-
-      return user;
-    }
-
-    return null;
-  } catch {
-    return null;
-  }
-};
 
 const createStripeUser = async ({ id, email }) => {
   const customer = await stripe.customers.create({ email });
@@ -84,7 +64,7 @@ export default async (req, res) => {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  let user = await getUser(req, res);
+  let user = await getUserFromHeader(req, res);
   if (!user) {
     return res
       .status(401)

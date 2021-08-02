@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  View,
   ActivityIndicator,
 } from 'react-native';
 
@@ -22,19 +21,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: colors.disabled,
-  },
-  indicatorsStyles: {
-    color: colors.secondary,
-    marginLeft: 16,
-  },
-  textLoading: {
-    marginRight: 6,
+    borderColor: colors.disabled,
   },
   containerOutline: {
     backgroundColor: 'transparent',
     borderColor: colors.border,
   },
-  
   text: {
     color: colors.white,
     alignSelf: 'center',
@@ -43,6 +35,9 @@ const styles = StyleSheet.create({
   },
   textOutline: {
     color: colors.brand,
+  },
+  textLoading: {
+    marginRight: 12,
   },
 });
 
@@ -55,23 +50,29 @@ export const Button = ({
   const containerStyles = [styles.container];
   const textStyles = [styles.text];
 
-  if (type === 'outline') {
+  const isOutline = type === 'outline';
+  if (isOutline) {
     containerStyles.push(styles.containerOutline);
     textStyles.push(styles.textOutline);
   }
+
   if (isLoading) {
     containerStyles.push(styles.containerLoading);
     textStyles.push(styles.textLoading);
-    return (
-      <View style={containerStyles}>
-        <Text style={textStyles}>{children}</Text>
-        <ActivityIndicator size="small" color={styles.indicatorsStyles.color}/>
-      </View>
-    );
   }
   return (
-    <TouchableOpacity onPress={onPress} style={containerStyles}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={containerStyles}
+      disabled={isLoading}
+    >
       <Text style={textStyles}>{children}</Text>
+      {isLoading && (
+        <ActivityIndicator
+          size="small"
+          color={isOutline ? colors.brand : colors.white}
+        />
+      )}
     </TouchableOpacity>
   );
 };

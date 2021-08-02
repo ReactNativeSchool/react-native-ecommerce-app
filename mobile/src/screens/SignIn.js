@@ -6,7 +6,6 @@ import { Button } from '../components/Button';
 import colors from '../constants/colors';
 import { validateCredentials } from '../util/auth';
 import { useSignIn } from '../util/api';
-import { Loading } from '../components/Loading';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,7 +18,7 @@ export const SignIn = ({ navigation }) => {
   const [form, setForm] = React.useState({});
   const [errors, setError] = React.useState({});
   const signin = useSignIn();
-  const { isLoading } = signin;
+
   const setValue = (field, value) => {
     setForm(f => {
       const next = { ...f };
@@ -62,7 +61,9 @@ export const SignIn = ({ navigation }) => {
         errorText={errors.password || signin?.error?.message}
         secureTextEntry
       />
-      <Button onPress={submit} isLoading={isLoading}>Sign In</Button>
+      <Button onPress={submit} isLoading={signin.isLoading}>
+        Sign In
+      </Button>
     </ScrollView>
   );
 };

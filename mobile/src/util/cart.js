@@ -2,6 +2,8 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import * as Analytics from './analytics';
+
 export const cartTotal = cart => {
   let total = 0;
 
@@ -42,6 +44,11 @@ export const useCart = create(
 
           cart[id].quantity += 1;
 
+          if (cart[id].quantity > 1) {
+            Analytics.trackEvent('Increase Item Quantity', cart[id]);
+          } else {
+            Analytics.trackEvent('Add Item to Cart', cart[id]);
+          }
           return { cart };
         }),
       removeItem: ({ id }) =>
@@ -55,9 +62,11 @@ export const useCart = create(
           const quantity = cart[id].quantity - 1;
 
           if (quantity <= 0) {
+            Analytics.trackEvent('Remove Item from Cart', cart[id]);
             delete cart[id];
           } else {
             cart[id].quantity = quantity;
+            Analytics.trackEvent('Decrease Item Quantity', cart[id]);
           }
 
           return { cart };

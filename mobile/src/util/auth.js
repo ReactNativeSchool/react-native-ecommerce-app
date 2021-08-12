@@ -5,16 +5,33 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import * as Analytics from './analytics';
+
 export const useAuth = create(
   persist(
     set => ({
       token: null,
-      setToken: token => set({ token }),
-      removeToken: () => set({ token: null }),
+      userId: null,
+      setToken: (token, userId) => {
+        Analytics.setUserId(userId);
+        set({ token, userId });
+      },
+      removeToken: () => {
+        Analytics.setUserId(null);
+        set({ token: null });
+      },
     }),
     {
       name: 'auth',
       getStorage: () => AsyncStorage,
+      onRehydrateStorage: state => {
+        console.log('auth state', state);
+        if (state?.userId) {
+          Analytics.setUserId(state.userId);
+        } else {
+          Analytics.setUserId(null);
+        }
+      },
     },
   ),
 );

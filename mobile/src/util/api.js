@@ -3,9 +3,17 @@ import { useStripe } from '@stripe/stripe-react-native';
 import { API_URL } from '@env';
 
 import { useAuth } from './auth';
+import * as Analytics from './analytics';
 
-const appFetch = (path, options = {}) =>
-  fetch(`${API_URL}${path}`, options).then(res => res.json());
+const appFetch = (path, options = {}) => {
+  Analytics.startTimer(path);
+  return fetch(`${API_URL}${path}`, options)
+    .then(res => res.json())
+    .then(res => {
+      Analytics.endTimer(path);
+      return res;
+    });
+};
 
 export const useSignIn = () => {
   const setToken = useAuth(state => state.setToken);
@@ -26,7 +34,7 @@ export const useSignIn = () => {
           throw new Error(data.message);
         }
 
-        setToken(data.token);
+        setToken(data.token, data.userId);
       },
     },
   );
@@ -51,7 +59,7 @@ export const useSignUp = () => {
           throw new Error(data.message);
         }
 
-        setToken(data.token);
+        setToken(data.token, data.userId);
       },
     },
   );
